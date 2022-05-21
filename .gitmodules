@@ -2,3 +2,6 @@
 	path = grpcbin
 	url = git@github.com:moul/grpcbin.git
 	branch = master
+[submodule "pb"]
+	path = pb
+	url = git@github.com:moul/pb.git
