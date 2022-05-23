@@ -1,5 +1,5 @@
 import grpc from "k6/net/grpc";
-import { Counter } from "k6/metrics";
+import { Rate } from "k6/metrics";
 import { check, group, sleep } from "k6";
 
 const client = new grpc.Client();
@@ -24,10 +24,7 @@ export const options = {
 };
 
 // Create a counter for the number of requests
-const grpc_reqs = new Counter("grpc_reqs");
-
-// Create a counter for the number of requests that failed
-const grpc_reqs_failed = new Counter("grpc_reqs_failed");
+const grpc_reqs = new Rate("grpc_reqs");
 
 export default () => {
     // Connect to the server
@@ -44,10 +41,7 @@ export default () => {
             const response = client.invoke("hello.HelloService/SayHello", data);
 
             // Add one to the counter for each request
-            grpc_reqs.add(response.status === grpc.StatusOK ? 1 : 0);
-
-            // Add one to the counter for each request that failed
-            grpc_reqs_failed.add(response.status !== grpc.StatusOK ? 1 : 0);
+            grpc_reqs.add(response.status === grpc.StatusOK);
 
             // Check that the response status is OK
             check(response, {
