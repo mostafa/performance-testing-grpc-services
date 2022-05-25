@@ -7,7 +7,11 @@ export const options = {
 };
 
 export default function () {
-    let res = http.get("http://test.k6.io");
+    let res = http.get("http://test.k6.io", {
+        tags: {
+            my_tag: "I'm a tag",
+        },
+    });
     check(res, {
         "status was 200": (r) => r.status === 200,
     });
