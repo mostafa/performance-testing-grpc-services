@@ -7,12 +7,12 @@ const client = new grpc.Client();
 
 export const options = {
     // discardResponseBodies: true,
-    vus: 50,
+    vus: 5000,  // Use too many VUs to fail the test by thresholds
     duration: "10s",
     thresholds: {
         grpc_req_duration: [
             {
-                threshold: "p(95)<=300",
+                threshold: "p(95)<=10",  // Set to a very low value to test thresholds
                 abortOnFail: true,
                 delayAbortEval: "1s",
             },
@@ -23,7 +23,7 @@ export const options = {
     },
 };
 
-// Create a counter for the number of requests
+// Create a rate for the number of requests
 const grpc_reqs = new Rate("grpc_reqs");
 
 export default () => {
